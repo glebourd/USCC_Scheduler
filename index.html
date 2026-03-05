@@ -469,7 +469,7 @@
                         <div>
                             <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase flex items-center gap-3">
                                 <Calendar size={32} className="text-blue-600" />
-                                Production <span className="text-blue-600">Tetris</span>
+                                US Custom Creations <span className="text-blue-600">Weekly Scheduler</span>
                             </h1>
                             <p className="text-slate-500 font-medium text-sm mt-1 italic">
                                 SOP Rules: Skill Matching, Cincinnati North Buffers, and
@@ -645,12 +645,12 @@
                                                     }}
                                                     className="text-[10px] text-blue-500 font-bold mb-2 flex flex-col items-start gap-1 hover:underline truncate w-full pr-4 uppercase tracking-tighter text-left"
                                                 >
-                                                    <span className="flex items-center">
+                                                    <span className="flex items-center text-[9px]">
                                                         <MapPin
                                                             size={10}
                                                             className="inline mr-1 shrink-0"
                                                         />
-                                                        {job.address.split(",")[0]}
+                                                        {job.address}
                                                     </span>
                                                 </button>
                                             )}
@@ -1164,6 +1164,77 @@
                                         Create Entry
                                     </button>
                                 </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Crew Management Modal */}
+                    {modals.settings && (
+                        <div
+                            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                            onClick={() => setModals({ ...modals, settings: false })}
+                        >
+                            <div
+                                className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl text-slate-900 border border-slate-200"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="p-6 bg-slate-800 text-white flex justify-between items-center relative">
+                                    <h2 className="font-black uppercase tracking-widest text-sm flex items-center gap-2">
+                                        <Settings size={18} /> Crew Management
+                                    </h2>
+                                    <button
+                                        onClick={() => setModals({ ...modals, settings: false })}
+                                        className="absolute right-4 top-4 p-3 bg-red-500 hover:bg-red-600 rounded-full text-white shadow-lg transition-transform hover:scale-110 active:scale-95 border-2 border-red-400 flex items-center justify-center z-50"
+                                    >
+                                        <X size={24} strokeWidth={3} />
+                                    </button>
+                                </div>
+                                <div className="p-8 space-y-4 max-h-[75vh] overflow-y-auto bg-slate-50">
+                                    <div className="bg-blue-50 p-4 rounded-2xl mb-4 text-blue-800 flex items-start gap-4">
+                                        <Info size={20} className="shrink-0 mt-0.5" />
+                                        <div className="space-y-1">
+                                            <p className="text-xs font-black uppercase tracking-tight">Managing Fleet Capacity</p>
+                                            <p className="text-[11px] leading-relaxed opacity-80 font-medium">To modify crews, define their roles here. Lead Foremen are required for complex jobs (Pergolas, Electrical, 2nd Story).</p>
+                                        </div>
+                                    </div>
+                                    {crews.map((crew, idx) => (
+                                        <div key={crew.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-4 transition-all hover:border-blue-300 hover:shadow-md">
+                                            <div className="flex-1 space-y-2">
+                                                <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest ml-1 block">Crew Designation</label>
+                                                <input
+                                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl font-bold outline-none focus:border-blue-500 text-sm"
+                                                    value={crew.name}
+                                                    onChange={(e) => {
+                                                        const newCrews = [...crews];
+                                                        newCrews[idx].name = e.target.value;
+                                                        setCrews(newCrews);
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="w-32 space-y-2">
+                                                <label className="text-[9px] font-black uppercase text-slate-400 tracking-widest ml-1 block">Role</label>
+                                                <select
+                                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl font-bold outline-none focus:border-blue-500 text-sm"
+                                                    value={crew.isLead ? "lead" : "helper"}
+                                                    onChange={(e) => {
+                                                        const newCrews = [...crews];
+                                                        newCrews[idx].isLead = e.target.value === "lead";
+                                                        setCrews(newCrews);
+                                                    }}
+                                                >
+                                                    <option value="lead">Lead Crew</option>
+                                                    <option value="helper">Helper Crew</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <button
+                                        onClick={() => setCrews([...crews, { id: Date.now(), name: `Crew ${crews.length + 1}`, isLead: false, leader: 'Unassigned' }])}
+                                        className="w-full py-4 mt-6 border-2 border-dashed border-slate-300 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-xs hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Plus size={16} /> Add New Crew
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
