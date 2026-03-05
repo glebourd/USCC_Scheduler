@@ -795,10 +795,10 @@
                                                                 onDragEnd={() => setDraggedItem(null)}
                                                                 className={`w-full rounded-[1.5rem] p-4 border-2 shadow-sm transition-all group relative overflow-hidden flex flex-col justify-between ${risks.length > 0 ? "bg-red-50 border-red-200" : "bg-white border-slate-100 hover:border-blue-300"} ${draggedItem?.job?.id === job.id ? "opacity-40 scale-95" : "opacity-100"}`}
                                                             >
-                                                                <div className="flex justify-between items-start gap-2">
+                                                                <div className="flex justify-between items-start gap-2 relative">
                                                                     <div className="flex flex-col">
                                                                         <span
-                                                                            className={`text-sm font-black uppercase leading-tight line-clamp-2 ${risks.length > 0 ? "text-red-900" : "text-slate-900"}`}
+                                                                            className={`text-sm font-black uppercase leading-tight line-clamp-2 pr-8 ${risks.length > 0 ? "text-red-900" : "text-slate-900"}`}
                                                                         >
                                                                             {job.name}
                                                                         </span>
@@ -823,9 +823,9 @@
                                                                     </div>
                                                                     <button
                                                                         onClick={() => removeFromSchedule(job.id)}
-                                                                        className="text-slate-300 hover:text-red-500 transition-colors shrink-0"
+                                                                        className="absolute top-0 right-0 p-1.5 bg-white text-slate-900 hover:bg-red-50 hover:text-red-600 rounded-full shadow-sm border border-slate-200 transition-all z-10"
                                                                     >
-                                                                        <X size={16} />
+                                                                        <X size={14} strokeWidth={3} />
                                                                     </button>
                                                                 </div>
 
@@ -919,9 +919,9 @@
                                     </h2>
                                     <button
                                         onClick={() => setModals({ ...modals, import: false })}
-                                        className="absolute right-4 top-4 p-2 text-white/60 hover:text-white transition-all hover:scale-110 active:scale-95 z-50"
+                                        className="absolute right-4 top-4 p-2 bg-white text-slate-900 hover:bg-slate-100 hover:text-red-600 rounded-full transition-all shadow-md hover:scale-110 active:scale-95 z-50"
                                     >
-                                        <X size={28} strokeWidth={2.5} />
+                                        <X size={20} strokeWidth={3} />
                                     </button>
                                 </div>
                                 <div className="p-8">
@@ -979,9 +979,9 @@
                                     </h2>
                                     <button
                                         onClick={() => setModals({ ...modals, add: false })}
-                                        className="absolute right-4 top-4 p-2 text-white/70 hover:text-white transition-all hover:scale-110 active:scale-95 z-50"
+                                        className="absolute right-4 top-4 p-2 bg-white text-slate-900 hover:bg-slate-100 hover:text-red-600 rounded-full transition-all shadow-md hover:scale-110 active:scale-95 z-50"
                                     >
-                                        <X size={28} strokeWidth={2.5} />
+                                        <X size={20} strokeWidth={3} />
                                     </button>
                                 </div>
                                 <form
@@ -1184,9 +1184,9 @@
                                     </h2>
                                     <button
                                         onClick={() => setModals({ ...modals, settings: false })}
-                                        className="absolute right-4 top-4 p-2 text-white/60 hover:text-white transition-all hover:scale-110 active:scale-95 z-50"
+                                        className="absolute right-4 top-4 p-2 bg-white text-slate-900 hover:bg-slate-100 hover:text-red-600 rounded-full transition-all shadow-md hover:scale-110 active:scale-95 z-50"
                                     >
-                                        <X size={28} strokeWidth={2.5} />
+                                        <X size={20} strokeWidth={3} />
                                     </button>
                                 </div>
                                 <div className="p-8 space-y-4 max-h-[75vh] overflow-y-auto bg-slate-50">
