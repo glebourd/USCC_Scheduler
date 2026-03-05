@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,29 +15,59 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
-        body { 
-            font-family: 'Inter', sans-serif; 
+
+        body {
+            font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
         }
-        /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        [draggable="true"] { cursor: grab; }
-        [draggable="true"]:active { cursor: grabbing; }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        [draggable="true"] {
+            cursor: grab;
+        }
+
+        [draggable="true"]:active {
+            cursor: grabbing;
+        }
 
         /* Animation for selections */
         .animate-bounce-slow {
             animation: bounce 2s infinite;
         }
+
         @keyframes bounce {
-            0%, 100% { transform: translateY(-5%) translateX(-50%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
-            50% { transform: translateY(0) translateX(-50%); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+
+            0%,
+            100% {
+                transform: translateY(-5%) translateX(-50%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: translateY(0) translateX(-50%);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
 
@@ -112,7 +143,7 @@
             const [schedule, setSchedule] = useState({});
             const [scheduledJobs, setScheduledJobs] = useState([]);
             const [activeSelection, setActiveSelection] = useState(null);
-            
+
             const [draggedItem, setDraggedItem] = useState(null);
             const [dragOverCell, setDragOverCell] = useState(null);
 
@@ -126,8 +157,8 @@
             const [importText, setImportText] = useState('');
 
             const [newJob, setNewJob] = useState({
-                name: '', value: '', duration: 1, type: 'USI', 
-                location: 'Louisville', address: '', complexity: 'Standard', 
+                name: '', value: '', duration: 1, type: 'USI',
+                location: 'Louisville', address: '', complexity: 'Standard',
                 isBuilder: false, elevation: 'Ground',
                 materialsReady: false, siteReady: false
             });
@@ -160,8 +191,20 @@
                         setShowSuggestions(false);
                     }
                 };
+                const handleKeyDown = (e) => {
+                    if (e.key === 'Escape') {
+                        setShowAddModal(false);
+                        setShowImportModal(false);
+                        setShowCrewSettings(false);
+                        setActiveSelection(null);
+                    }
+                };
                 document.addEventListener('mousedown', handleClickOutside);
-                return () => document.removeEventListener('mousedown', handleClickOutside);
+                window.addEventListener('keydown', handleKeyDown);
+                return () => {
+                    document.removeEventListener('mousedown', handleClickOutside);
+                    window.removeEventListener('keydown', handleKeyDown);
+                };
             }, []);
 
             const fetchSuggestions = async (query) => {
@@ -275,7 +318,7 @@
 
             const handleSlotClick = (crewId, startDayIdx) => {
                 if (!activeSelection) return;
-                const mockEvent = { preventDefault: () => {} };
+                const mockEvent = { preventDefault: () => { } };
                 setDraggedItem({ type: 'backlog', job: activeSelection });
                 setTimeout(() => {
                     handleDrop(mockEvent, crewId, startDayIdx);
@@ -374,7 +417,7 @@
                             US Custom Creations <span className="text-blue-600">Weekly Scheduler</span>
                         </h1>
                         <p className="text-slate-500 text-sm font-medium mt-1 max-w-3xl">
-                            Manage the weekly "Tetris" of scheduling to hit the $45,000 production target. 
+                            Manage the weekly "Tetris" of scheduling to hit the $45,000 production target.
                             Prioritize cash flow, balance lead crew loads ($20k/crew), and strictly enforce SOP rules. Drag and drop jobs to schedule.
                         </p>
                     </div>
@@ -417,13 +460,13 @@
 
                         <div className="md:col-span-3 grid grid-cols-2 grid-rows-2 gap-2">
                             <button onClick={() => setShowImportModal(true)} className="col-span-2 bg-emerald-600 text-white rounded-xl font-black text-[11px] flex items-center justify-center gap-2 hover:bg-emerald-700 shadow-md py-3 uppercase tracking-tighter">
-                                <Upload size={16}/> Import BuilderTrend data
+                                <Upload size={16} /> Import BuilderTrend data
                             </button>
                             <button onClick={() => setShowAddModal(true)} className="bg-blue-600 text-white rounded-xl font-black text-[10px] flex items-center justify-center gap-1.5 hover:bg-blue-700 shadow-md py-3 uppercase">
-                                <Plus size={14}/> Manual Job
+                                <Plus size={14} /> Manual Job
                             </button>
                             <button onClick={() => setShowCrewSettings(!showCrewSettings)} className="bg-slate-800 text-white rounded-xl font-black text-[10px] flex items-center justify-center gap-1.5 hover:bg-black shadow-md py-3 uppercase">
-                                <Settings size={14}/> Crews
+                                <Settings size={14} /> Crews
                             </button>
                         </div>
                     </div>
@@ -435,7 +478,7 @@
                                 <div className="bg-slate-800 text-white p-5 rounded-2xl shadow-xl">
                                     <div className="flex justify-between items-center mb-4">
                                         <h3 className="font-black text-sm uppercase tracking-widest">Crew Config</h3>
-                                        <button onClick={() => setShowCrewSettings(false)} className="p-1 hover:bg-slate-700 rounded-full transition-colors"><X size={16}/></button>
+                                        <button onClick={() => setShowCrewSettings(false)} className="p-1 hover:bg-slate-700 rounded-full transition-colors"><X size={16} /></button>
                                     </div>
                                     <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
                                         {crews.map(crew => (
@@ -453,7 +496,7 @@
 
                             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col max-h-[75vh]">
                                 <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center text-slate-800">
-                                    <h3 className="font-black text-sm flex items-center gap-2 tracking-tight"><Clock size={16} className="text-blue-600"/> JOB BACKLOG</h3>
+                                    <h3 className="font-black text-sm flex items-center gap-2 tracking-tight"><Clock size={16} className="text-blue-600" /> JOB BACKLOG</h3>
                                     <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-black tracking-widest">{backlog.length}</span>
                                 </div>
                                 <div className="p-4 overflow-y-auto space-y-3 bg-slate-50/20 flex-1">
@@ -509,10 +552,10 @@
                                                         <div className="mt-4 pt-3 border-t border-slate-200">
                                                             <div className="flex justify-between text-[8px] font-black uppercase mb-1 text-slate-500 tracking-tighter">
                                                                 <span>Target: $20k</span>
-                                                                <span className={targetReached ? 'text-emerald-600' : 'text-blue-600'}>${(crewProd/1000).toFixed(1)}k</span>
+                                                                <span className={targetReached ? 'text-emerald-600' : 'text-blue-600'}>${(crewProd / 1000).toFixed(1)}k</span>
                                                             </div>
                                                             <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                                                <div className={`h-full transition-all ${targetReached ? 'bg-emerald-500' : 'bg-blue-500'}`} style={{ width: `${Math.min((crewProd/20000)*100, 100)}%` }} />
+                                                                <div className={`h-full transition-all ${targetReached ? 'bg-emerald-500' : 'bg-blue-500'}`} style={{ width: `${Math.min((crewProd / 20000) * 100, 100)}%` }} />
                                                             </div>
                                                         </div>
                                                     )}
@@ -544,34 +587,34 @@
                                                     const isDragOver = dragOverCell === `${crew.id}-${dayIdx}`;
 
                                                     return (
-                                                        <div 
-                                                            key={day} 
+                                                        <div
+                                                            key={day}
                                                             className={`p-2 relative group flex items-stretch ${colSpanClass}`}
                                                             onDragOver={(e) => { e.preventDefault(); setDragOverCell(`${crew.id}-${dayIdx}`); }}
                                                             onDragLeave={() => setDragOverCell(null)}
                                                             onDrop={(e) => handleDrop(e, crew.id, dayIdx)}
                                                         >
                                                             {job ? (
-                                                                <div 
-                                                                    draggable={true} 
-                                                                    onDragStart={(e) => handleDragStartBoard(e, job, crew.id, dayIdx)} 
-                                                                    onDragEnd={handleDragEnd} 
+                                                                <div
+                                                                    draggable={true}
+                                                                    onDragStart={(e) => handleDragStartBoard(e, job, crew.id, dayIdx)}
+                                                                    onDragEnd={handleDragEnd}
                                                                     className={`w-full border-2 rounded-2xl shadow-sm flex flex-col justify-start transition-all relative overflow-hidden ${blockStyle.bg} ${draggedItem?.job?.id === job.id ? 'opacity-40 scale-95' : 'opacity-100 hover:shadow-md'}`}
                                                                 >
-                                                                    <div className="absolute inset-0 opacity-[0.04]" style={{backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)', backgroundSize: '8px 8px'}}></div>
+                                                                    <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)', backgroundSize: '8px 8px' }}></div>
                                                                     <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${blockStyle.accent}`} />
                                                                     <div className="p-3 pl-4 relative z-10 flex flex-col h-full text-slate-900">
                                                                         <div className="flex justify-between items-start gap-2">
                                                                             <div className="flex-1 min-w-0 text-slate-900">
                                                                                 <span className={`font-black text-[11px] uppercase leading-tight block ${spanCount === 1 ? 'truncate' : 'line-clamp-2'} ${blockStyle.text}`}>{job.name}</span>
-                                                                                {job.address && <button onClick={(e) => { e.stopPropagation(); openInMaps(job.address); }} className={`text-[9px] font-bold mt-1 flex items-start gap-1 hover:underline text-left uppercase tracking-tighter ${blockStyle.lightText}`}><MapPin size={10} className="shrink-0 mt-0.5"/> <span className={spanCount === 1 ? 'truncate' : 'whitespace-normal line-clamp-2'}>{job.address}</span></button>}
+                                                                                {job.address && <button onClick={(e) => { e.stopPropagation(); openInMaps(job.address); }} className={`text-[9px] font-bold mt-1 flex items-start gap-1 hover:underline text-left uppercase tracking-tighter ${blockStyle.lightText}`}><MapPin size={10} className="shrink-0 mt-0.5" /> <span className={spanCount === 1 ? 'truncate' : 'whitespace-normal line-clamp-2'}>{job.address}</span></button>}
                                                                             </div>
-                                                                            <button onClick={(e) => { e.stopPropagation(); removeFromSchedule(job.id); }} className={`${blockStyle.lightText} hover:text-red-600 rounded-md transition-colors p-1`} title="Remove from Board"><X size={14}/></button>
+                                                                            <button onClick={(e) => { e.stopPropagation(); removeFromSchedule(job.id); }} className={`${blockStyle.lightText} hover:text-red-600 rounded-md transition-colors p-1`} title="Remove from Board"><X size={14} /></button>
                                                                         </div>
                                                                         <div className="mt-2 flex flex-wrap gap-1.5 items-center">
                                                                             <div className={`inline-block px-2 py-0.5 rounded-md text-[11px] font-black border ${getValueShading(job.value)}`}>${job.value.toLocaleString()}</div>
-                                                                            {risks.map((risk, idx) => <div key={idx} className="flex items-center gap-1 text-[9px] text-red-700 font-black px-1.5 py-0.5 bg-red-100 rounded uppercase border border-red-200"><AlertTriangle size={10}/> {risk}</div>)}
-                                                                            {risks.length === 0 && <div className="flex items-center gap-1 text-[9px] font-black text-emerald-700 uppercase tracking-tighter bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200"><CheckCircle size={10}/> Ready</div>}
+                                                                            {risks.map((risk, idx) => <div key={idx} className="flex items-center gap-1 text-[9px] text-red-700 font-black px-1.5 py-0.5 bg-red-100 rounded uppercase border border-red-200"><AlertTriangle size={10} /> {risk}</div>)}
+                                                                            {risks.length === 0 && <div className="flex items-center gap-1 text-[9px] font-black text-emerald-700 uppercase tracking-tighter bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200"><CheckCircle size={10} /> Ready</div>}
                                                                         </div>
                                                                         <div className={`absolute bottom-2 right-2 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm ${blockStyle.accent}`}>{job.duration}D</div>
                                                                     </div>
@@ -592,11 +635,11 @@
 
                     {/* MODALS */}
                     {showImportModal && (
-                        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                            <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden border border-slate-300 flex flex-col text-slate-900">
-                                <div className="p-5 bg-emerald-700 text-white flex justify-between items-center">
-                                    <h2 className="font-black text-lg uppercase tracking-tighter flex items-center gap-2 font-mono tracking-tight"><FileText size={20}/> Bulk Import BuilderTrend Data</h2>
-                                    <button onClick={() => setShowImportModal(false)} className="p-2 hover:bg-white/10 rounded-full text-white"><X size={18}/></button>
+                        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4" onClick={() => setShowImportModal(false)}>
+                            <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden border border-slate-300 flex flex-col text-slate-900" onClick={e => e.stopPropagation()}>
+                                <div className="p-5 bg-emerald-700 text-white flex justify-between items-center relative">
+                                    <h2 className="font-black text-lg uppercase tracking-tighter flex items-center gap-2 font-mono tracking-tight"><FileText size={20} /> Bulk Import BuilderTrend Data</h2>
+                                    <button onClick={() => setShowImportModal(false)} className="absolute right-4 top-4 p-2 bg-emerald-800 hover:bg-emerald-900 rounded-full text-white shadow-md transition-colors border border-emerald-600"><X size={20} /></button>
                                 </div>
                                 <div className="p-6 flex flex-col gap-4 text-slate-900">
                                     <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
@@ -615,16 +658,16 @@
                     )}
 
                     {showAddModal && (
-                        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                            <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-300 text-slate-900">
-                                <div className="p-5 bg-slate-800 text-white flex justify-between items-center">
+                        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
+                            <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-300 text-slate-900" onClick={e => e.stopPropagation()}>
+                                <div className="p-5 bg-slate-800 text-white flex justify-between items-center relative">
                                     <h2 className="font-black text-lg uppercase tracking-tighter">New Job Entry</h2>
-                                    <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white/10 rounded-full text-white"><X size={18}/></button>
+                                    <button onClick={() => setShowAddModal(false)} className="absolute right-4 top-4 p-2 bg-slate-700 hover:bg-slate-900 rounded-full text-white shadow-md transition-colors border border-slate-600"><X size={20} /></button>
                                 </div>
                                 <form onSubmit={handleAddJob} className="p-5 space-y-3 max-h-[80vh] overflow-y-auto">
                                     <div>
                                         <label className="text-[10px] font-black uppercase text-slate-400">Client Name</label>
-                                        <input required className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold focus:border-blue-500 outline-none" value={newJob.name} onChange={e => setNewJob({...newJob, name: e.target.value})} placeholder="e.g. Miller Residence" />
+                                        <input required className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold focus:border-blue-500 outline-none" value={newJob.name} onChange={e => setNewJob({ ...newJob, name: e.target.value })} placeholder="e.g. Miller Residence" />
                                     </div>
                                     <div className="relative" ref={suggestionRef}>
                                         <label className="text-[10px] font-black uppercase text-slate-400">Job Address</label>
@@ -645,27 +688,27 @@
                                         )}
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 text-slate-900">
-                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Value ($)</label><input required type="number" className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none" value={newJob.value} onChange={e => setNewJob({...newJob, value: e.target.value})} /></div>
-                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Days</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.duration} onChange={e => setNewJob({...newJob, duration: parseInt(e.target.value)})}>{[1,2,3,4,5].map(d => <option key={d} value={d}>{d} Day{d > 1 ? 's' : ''}</option>)}</select></div>
+                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Value ($)</label><input required type="number" className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none" value={newJob.value} onChange={e => setNewJob({ ...newJob, value: e.target.value })} /></div>
+                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Days</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.duration} onChange={e => setNewJob({ ...newJob, duration: parseInt(e.target.value) })}>{[1, 2, 3, 4, 5].map(d => <option key={d} value={d}>{d} Day{d > 1 ? 's' : ''}</option>)}</select></div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 text-slate-900">
-                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Job Type</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.type} onChange={e => setNewJob({...newJob, type: e.target.value})}><option value="USI">USI</option><option value="Screen">Screen</option><option value="Pergola">Pergola</option><option value="Shades">Shades</option></select></div>
-                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Complexity</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.complexity} onChange={e => setNewJob({...newJob, complexity: e.target.value})}><option value="Standard">Standard</option><option value="Complex">Complex (Lead Req)</option></select></div>
+                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Job Type</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.type} onChange={e => setNewJob({ ...newJob, type: e.target.value })}><option value="USI">USI</option><option value="Screen">Screen</option><option value="Pergola">Pergola</option><option value="Shades">Shades</option></select></div>
+                                        <div><label className="text-[10px] font-black uppercase text-slate-400">Complexity</label><select className="w-full p-3 bg-slate-100 border-2 border-slate-100 rounded-xl mt-1 font-bold outline-none text-slate-900" value={newJob.complexity} onChange={e => setNewJob({ ...newJob, complexity: e.target.value })}><option value="Standard">Standard</option><option value="Complex">Complex (Lead Req)</option></select></div>
                                     </div>
                                     <div className="pt-2 space-y-2 text-slate-900">
                                         <label className="flex items-center gap-3 cursor-pointer bg-slate-50 p-2.5 rounded-xl border border-slate-200">
-                                            <input type="checkbox" checked={newJob.isBuilder} onChange={e => setNewJob({...newJob, isBuilder: e.target.checked})} className="w-4 h-4 rounded text-blue-600" />
+                                            <input type="checkbox" checked={newJob.isBuilder} onChange={e => setNewJob({ ...newJob, isBuilder: e.target.checked })} className="w-4 h-4 rounded text-blue-600" />
                                             <span className="text-[10px] font-black uppercase text-slate-600">Builder/Contractor Account</span>
                                         </label>
                                         <div className="bg-blue-50 border border-blue-200 p-3 rounded-xl space-y-2 text-slate-800">
-                                            <div className="text-[9px] font-black uppercase text-blue-600 flex items-center gap-1 tracking-wider"><CheckSquare size={12}/> SOP Verification</div>
+                                            <div className="text-[9px] font-black uppercase text-blue-600 flex items-center gap-1 tracking-wider"><CheckSquare size={12} /> SOP Verification</div>
                                             <label className="flex items-center gap-3 cursor-pointer">
-                                                <input type="checkbox" required checked={newJob.materialsReady} onChange={e => setNewJob({...newJob, materialsReady: e.target.checked})} className="w-4 h-4 rounded text-blue-600" />
+                                                <input type="checkbox" required checked={newJob.materialsReady} onChange={e => setNewJob({ ...newJob, materialsReady: e.target.checked })} className="w-4 h-4 rounded text-blue-600" />
                                                 <span className="text-[10px] font-bold">100% Materials Verified On-Hand</span>
                                             </label>
                                             {newJob.isBuilder && (
                                                 <label className="flex items-center gap-3 cursor-pointer">
-                                                    <input type="checkbox" required checked={newJob.siteReady} onChange={e => setNewJob({...newJob, siteReady: e.target.checked})} className="w-4 h-4 rounded text-blue-600" />
+                                                    <input type="checkbox" required checked={newJob.siteReady} onChange={e => setNewJob({ ...newJob, siteReady: e.target.checked })} className="w-4 h-4 rounded text-blue-600" />
                                                     <span className="text-[10px] font-bold">Site Readiness Complete (Elec/Concrete)</span>
                                                 </label>
                                             )}
@@ -682,7 +725,7 @@
                             <div className="flex flex-col"><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Placing Job</span><span className="font-black text-sm uppercase tracking-tight">{activeSelection.name} ({activeSelection.duration} Days)</span></div>
                             <div className="h-10 w-px bg-slate-700" />
                             <span className="text-xs font-bold text-blue-400 italic">Click a starting "+" to schedule</span>
-                            <button onClick={() => setActiveSelection(null)} className="bg-slate-800 hover:bg-red-600 p-2 rounded-full transition-colors"><X size={18}/></button>
+                            <button onClick={() => setActiveSelection(null)} className="bg-slate-800 hover:bg-red-600 p-2 rounded-full transition-colors"><X size={18} /></button>
                         </div>
                     )}
                 </div>
@@ -693,4 +736,5 @@
         root.render(<App />);
     </script>
 </body>
+
 </html>
