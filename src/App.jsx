@@ -81,21 +81,35 @@ export const App = () => {
         }
 
         const newSchedule = { ...schedule };
+        // If moving within the board, remove from old days first
         if (type === 'board') {
             const oldCrewDays = { ...newSchedule[sourceCrewId] };
-            for (let i = 0; i < job.duration; i++) delete oldCrewDays[sourceDayIdx + i];
+            for (let i = 0; i < job.duration; i++) {
+                delete oldCrewDays[sourceDayIdx + i];
+            }
             newSchedule[sourceCrewId] = oldCrewDays;
         }
 
+        // Add to new days
         const newCrewDays = { ...(newSchedule[targetCrewId] || {}) };
-        for (let i = 0; i < job.duration; i++) newCrewDays[targetDayIdx + i] = job.id;
+        for (let i = 0; i < job.duration; i++) {
+            newCrewDays[targetDayIdx + i] = job.id;
+        }
         newSchedule[targetCrewId] = newCrewDays;
 
         setSchedule(newSchedule);
+
+        // Only move from backlog if it came from the backlog
         if (type === 'backlog') {
-            setScheduledJobs(prev => [...prev, job]);
+            setScheduledJobs(prev => {
+                if (!prev.find(j => j.id === job.id)) {
+                    return [...prev, job];
+                }
+                return prev;
+            });
             setBacklog(prev => prev.filter(j => j.id !== job.id));
         }
+
         setDraggedItem(null);
     };
 
