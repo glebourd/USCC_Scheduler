@@ -1,9 +1,13 @@
 import { List } from 'lucide-react';
 import { JobCard } from '../cards/JobCard';
 
-export const JobBacklog = ({ backlog, activeSelection, draggedItem, setDraggedItem, setActiveSelection }) => {
+export const JobBacklog = ({ backlog, activeSelection, draggedItem, setDraggedItem, setActiveSelection, handleDropToBacklog }) => {
     return (
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[650px]">
+        <div
+            className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[650px]"
+            onDragOver={e => e.preventDefault()}
+            onDrop={handleDropToBacklog}
+        >
             <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
                 <h3 className="font-black text-xs uppercase tracking-widest text-slate-600 flex items-center gap-2">
                     <List size={16} className="text-blue-500" /> Job Backlog

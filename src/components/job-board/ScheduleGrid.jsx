@@ -71,10 +71,21 @@ export const ScheduleGrid = ({
                                 (job.hasElectrical && !crew.isLead ? "Lead Req." : null)
                             ].filter(Boolean) : [];
 
+                            const colSpans = {
+                                1: 'col-span-1',
+                                2: 'col-span-2',
+                                3: 'col-span-3',
+                                4: 'col-span-4',
+                                5: 'col-span-5',
+                                6: 'col-span-6',
+                            };
+
+                            const spanClass = job ? colSpans[job.duration] || 'col-span-1' : 'col-span-1';
+
                             return (
                                 <div
                                     key={dIdx}
-                                    className={`p-2 relative flex items-stretch col-span-${job ? job.duration : 1}`}
+                                    className={`p-2 relative flex items-stretch ${spanClass}`}
                                     onDragOver={e => { e.preventDefault(); setDragOverCell(`${crew.id}-${dIdx}`); }}
                                     onDragLeave={() => setDragOverCell(null)}
                                     onDrop={e => handleDrop(e, crew.id, dIdx)}

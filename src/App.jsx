@@ -80,26 +80,30 @@ export const App = () => {
             }
         }
 
-        const newSchedule = { ...schedule };
-        // If moving within the board, remove from old days first
-        if (type === 'board') {
-            const oldCrewDays = { ...newSchedule[sourceCrewId] };
-            for (let i = 0; i < job.duration; i++) {
-                delete oldCrewDays[sourceDayIdx + i];
-            }
-            newSchedule[sourceCrewId] = oldCrewDays;
-        }
+        let newSchedule = { ...schedule };
 
-        // Add to new days
-        const newCrewDays = { ...(newSchedule[targetCrewId] || {}) };
+        // 1. Completely strip this job ID from the schedule before attempting to place it again.
+        Object.keys(newSchedule).forEach(cId => {
+            const crewDays = { ...newSchedule[cId] };
+            Object.keys(crewDays).forEach(dIdx => {
+                if (crewDays[dIdx] === job.id) {
+                    delete crewDays[dIdx];
+                }
+            });
+            newSchedule[cId] = crewDays;
+        });
+
+        // 2. Add to NEW days
+        const targetCrewDays = { ...(newSchedule[targetCrewId] || {}) };
         for (let i = 0; i < job.duration; i++) {
-            newCrewDays[targetDayIdx + i] = job.id;
+            targetCrewDays[targetDayIdx + i] = job.id;
         }
-        newSchedule[targetCrewId] = newCrewDays;
+        newSchedule[targetCrewId] = targetCrewDays;
 
+        // 3. Commit new schedule
         setSchedule(newSchedule);
 
-        // Only move from backlog if it came from the backlog
+        // 4. Update arrays if coming from backlog
         if (type === 'backlog') {
             setScheduledJobs(prev => {
                 if (!prev.find(j => j.id === job.id)) {
@@ -115,22 +119,39 @@ export const App = () => {
 
     const removeFromSchedule = (jobId) => {
         const jobToRemove = scheduledJobs.find(j => j.id === jobId);
-        const newSchedule = { ...schedule };
-        Object.keys(newSchedule).forEach(crewId => {
-            const crewDays = { ...newSchedule[crewId] };
-            Object.keys(crewDays).forEach(dayIdx => { if (crewDays[dayIdx] === jobId) delete crewDays[dayIdx]; });
-            newSchedule[crewId] = crewDays;
+
+        let newSchedule = { ...schedule };
+        Object.keys(newSchedule).forEach(cId => {
+            const crewDays = { ...newSchedule[cId] };
+            Object.keys(crewDays).forEach(dIdx => {
+                if (crewDays[dIdx] === jobId) {
+                    delete crewDays[dIdx];
+                }
+            });
+            newSchedule[cId] = crewDays;
         });
+
         setSchedule(newSchedule);
         setScheduledJobs(prev => prev.filter(j => j.id !== jobId));
         if (jobToRemove) setBacklog(prev => [...prev, jobToRemove]);
     };
 
+    const handleDropToBacklog = (e) => {
+        e.preventDefault();
+        if (!draggedItem || !draggedItem.job) return;
+
+        const job = draggedItem.job;
+        if (scheduledJobs.some(j => j.id === job.id)) {
+            removeFromSchedule(job.id);
+        }
+        setDraggedItem(null);
+    };
+
     const handleBulkImport = () => {
         if (!importText.trim()) return;
-        const rows = importText.split('\\n');
+        const rows = importText.split('\n');
         const imported = rows.map(row => {
-            const cols = row.split('\\t');
+            const cols = row.split('\t');
             if (cols.length < 2) return null;
             const name = cols[0].trim();
             if (!name) return null;
@@ -206,6 +227,7 @@ export const App = () => {
                         draggedItem={draggedItem}
                         setDraggedItem={setDraggedItem}
                         setActiveSelection={setActiveSelection}
+                        handleDropToBacklog={handleDropToBacklog}
                     />
                 </div>
                 <div className="lg:col-span-9">
